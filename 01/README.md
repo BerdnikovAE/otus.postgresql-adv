@@ -132,8 +132,3 @@ select * from persons;
 # удалить виртуалку не забыть 
 yc compute instance delete pg
 ```
-
-
-
->>>>>>> cbc9aa3d7cbc0cc702fbd1af8e5e9b3bdb246c38
-
