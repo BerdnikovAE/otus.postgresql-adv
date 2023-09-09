@@ -1,1 +1,0 @@
-# otus.postgresql-adv
