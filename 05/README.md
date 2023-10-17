@@ -102,6 +102,7 @@ sudo -u postgres psql -c "select * from t1;" -d test -p 5433
 # восстановим DELTA
 sudo systemctl stop postgresql@15-main2
 sudo rm -rf /var/lib/postgresql/15/main2
+sudo -u postgres pg_probackup-15 restore --instance 'main' -i 'S2OICC' -D /var/lib/postgresql/15/main2 -B /var/pg_backup
 sudo systemctl start postgresql@15-main2
 sudo -u postgres psql -c "select * from t1;" -d test -p 5433
 # id |    name
