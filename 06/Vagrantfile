@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/focal64"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    # vb.gui = true
+  end
+
+  config.vm.define "etcd-01" do |v|
+    v.vm.hostname = "etcd-01"
+    v.vm.network "private_network", ip: "192.168.0.1", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
+  config.vm.define "etcd-02" do |v|
+    v.vm.hostname = "etcd-02"
+    v.vm.network "private_network", ip: "192.168.0.2", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
+  config.vm.define "etcd-03" do |v|
+    v.vm.hostname = "etcd-03"
+    v.vm.network "private_network", ip: "192.168.0.3", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
+
+end

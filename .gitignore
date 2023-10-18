@@ -1,0 +1,4 @@
+*.vdi
+*.iso
+*.box
+.vagrant
