@@ -28,5 +28,23 @@ Vagrant.configure(2) do |config|
     # v.vm.provision "shell", path: "provision.sh"
   end
 
+  config.vm.define "pgsql-01" do |v|
+    v.vm.hostname = "pgsql-01"
+    v.vm.network "private_network", ip: "192.168.0.4", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
+  config.vm.define "pgsql-02" do |v|
+    v.vm.hostname = "pgsql-02"
+    v.vm.network "private_network", ip: "192.168.0.5", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
+  config.vm.define "pgsql-03" do |v|
+    v.vm.hostname = "pgsql-03"
+    v.vm.network "private_network", ip: "192.168.0.5", virtualbox__intnet: "net-1"
+    # v.vm.provision "shell", path: "provision.sh"
+  end
+
 
 end
