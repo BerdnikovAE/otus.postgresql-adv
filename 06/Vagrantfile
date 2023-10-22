@@ -10,41 +10,37 @@ Vagrant.configure(2) do |config|
     # vb.gui = true
   end
 
-  config.vm.define "etcd-01" do |v|
-    v.vm.hostname = "etcd-01"
-    v.vm.network "private_network", ip: "192.168.0.1", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
+  (1..3).each do |i|
+    config.vm.define "etcd-0#{i}" do |node|
+      node.vm.hostname = "etcd-0#{i}"
+      node.vm.network "private_network", ip: "192.168.0.1#{i}", virtualbox__intnet: "net-1"
+      node.vm.provision "shell", path: "prov-etcd.sh"
+    end
   end
 
-  config.vm.define "etcd-02" do |v|
-    v.vm.hostname = "etcd-02"
-    v.vm.network "private_network", ip: "192.168.0.2", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
+  (1..3).each do |i|
+    config.vm.define "pgsql-0#{i}" do |node|
+      node.vm.hostname = "pgsql-0#{i}"
+      node.vm.network "private_network", ip: "192.168.0.2#{i}", virtualbox__intnet: "net-1"
+      node.vm.provision "shell", path: "prov-patroni.sh"
+      node.vm.provision "shell", path: "prov-pgbouncer.sh"
+      end
   end
 
-  config.vm.define "etcd-03" do |v|
-    v.vm.hostname = "etcd-03"
-    v.vm.network "private_network", ip: "192.168.0.3", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
+  (1..1).each do |i|
+    config.vm.define "haproxy-0#{i}" do |node|
+      node.vm.hostname = "haproxy-0#{i}"
+      node.vm.network "private_network", ip: "192.168.0.3#{i}", virtualbox__intnet: "net-1"
+      node.vm.provision "shell", path: "prov-haproxy.sh"
+      end
   end
 
-  config.vm.define "pgsql-01" do |v|
-    v.vm.hostname = "pgsql-01"
-    v.vm.network "private_network", ip: "192.168.1.1", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
+  config.vm.define "client" do |node|
+    node.vm.hostname = "client"
+    node.vm.network "private_network", ip: "192.168.0.99", virtualbox__intnet: "net-1"
+    node.vm.provision "shell", inline: "sudo apt update && sudo apt upgrade -y && sudo apt install -y postgresql-client-common && sudo apt install postgresql-client -y"
   end
 
-  config.vm.define "pgsql-02" do |v|
-    v.vm.hostname = "pgsql-02"
-    v.vm.network "private_network", ip: "192.168.1.2", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
-  end
-
-  config.vm.define "pgsql-03" do |v|
-    v.vm.hostname = "pgsql-03"
-    v.vm.network "private_network", ip: "192.168.1.3", virtualbox__intnet: "net-1"
-    # v.vm.provision "shell", path: "provision.sh"
-  end
-
+  
 
 end
