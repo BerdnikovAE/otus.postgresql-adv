@@ -1,6 +1,3 @@
-# Установка Postgresql отказоусточивой конфигурации: etcd+Patroni+Postgresql+pgbouncer+HAProxy+keepalived
-# (делать будем на VirtualBox + Vagrant из под Windows+Powershell)
-
 ####################
 # etcd (https://etcd.io/)
 ####################

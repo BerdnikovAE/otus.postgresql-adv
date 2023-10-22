@@ -6,7 +6,7 @@
 
 Вот [Vagrantfile](Vagrantfile) для развертывания всех виртуалок:
 - 3 x etcd, провижинится скриптом [prov-etcd.sh](prov-etcd.sh)
-- 3 x (postgresql + patroni + pgbouncer), провижинится скриптом [prov-patroni.sh](prov-patroni.sh) + [prov-pgbouncer.sh](prov-bouncer.sh) + 
+- 3 x (postgresql + patroni + pgbouncer), провижинится скриптом [prov-patroni.sh](prov-patroni.sh) + [prov-pgbouncer.sh](prov-pgbouncer.sh) + 
 - 1 x haproxy провижинится скриптом [prov-haproxy.sh](prov-haproxy.sh)
 - 1 x client, там просто ставим ```postgresql-client```
 
