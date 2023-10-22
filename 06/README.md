@@ -2,7 +2,7 @@
 
 Установка Postgresql в отказоусточивой конфигурации: etcd+Patroni+Postgresql+pgbouncer+HAProxy
 
-Делать будем на VirtualBox + Vagrant из под Windows+Powershell
+Делать будем на VirtualBox + Vagrant из под Windows
 
 Вот [Vagrantfile](Vagrantfile) для развертывания всех виртуалок:
 - 3 x etcd, провижинится скриптом [prov-etcd.sh](prov-etcd.sh)
