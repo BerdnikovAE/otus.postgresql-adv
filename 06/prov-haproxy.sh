@@ -21,7 +21,7 @@ defaults
 
 listen postgres_write
     bind *:5000
-    mode            tcp
+    mode tcp
     option httpchk
     http-check connect
     http-check send meth GET uri /master
@@ -33,7 +33,7 @@ listen postgres_write
 
 listen postgres_read
     bind *:5001
-    mode            tcp
+    mode tcp
     http-check connect
     http-check send meth GET uri /replica
     http-check expect status 200
@@ -44,7 +44,7 @@ listen postgres_read
 EOF
 
 sudo systemctl restart haproxy.service
-sudo systemctl status haproxy.service
+sudo systemctl status haproxy.service --no-page -l
 
 #sudo cat /var/log/haproxy.log
 

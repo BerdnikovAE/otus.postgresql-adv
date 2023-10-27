@@ -10,7 +10,7 @@
 - 1 x haproxy провижинится скриптом [prov-haproxy.sh](prov-haproxy.sh)
 - 1 x client, там просто ставим ```postgresql-client```
 
-``` ps
+``` ps1
 # запустим vm для etcd
 vagrant up etcd-01 etcd-02 etcd-03
 
@@ -45,7 +45,7 @@ vagrant ssh pgsql-01 -c 'patronictl -c /etc/patroni/postgres0.yml list'
 vagrant up haproxy-01 
 
 # посмотрим журнал - все правильно пишет: pgsql-02, pgsql-03 is DOWN
-sudo journalctl -u haproxy.service --since today --no-pager
+vagrant ssh haproxy-01 -c 'sudo journalctl -u haproxy.service --since today --no-pager'
 #Oct 22 09:56:18 haproxy-01 systemd[1]: Starting HAProxy Load Balancer... --> -->
 #Oct 22 09:56:18 haproxy-01 haproxy[5097]: [NOTICE]   (5097) : haproxy version is 2.5.14-1ppa1~focal
 #Oct 22 09:56:18 haproxy-01 haproxy[5097]: [NOTICE]   (5097) : path to executable is /usr/sbin/haproxy
@@ -56,9 +56,12 @@ sudo journalctl -u haproxy.service --since today --no-pager
 #Oct 22 09:56:20 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-02 is DOWN, reason: Layer7 wrong status, code: 503, info: "Service Unavailable", check duration: 4ms. 2 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
 #Oct 22 09:56:22 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-03 is DOWN, reason: Layer7 wrong status, code: 503, info: "Service Unavailable", check duration: 4ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
 
+vagrant up client
+
 # проверим куда подключаемся с client
-vagrant ssh client
-export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"
+vagrant ssh client -c '
+export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"'
+
 #You are connected to database "postgres" as user "admin" on host "192.168.0.31" at port "5000".
 
 # Выглядит будто норм, но делаем switchover, успешно
@@ -72,13 +75,12 @@ vagrant ssh pgsql-01 -c 'patronictl -c /etc/patroni/postgres0.yml switchover'
 #+----------+--------------+---------+-----------+----+-----------+
 
 # смотрим что заметил haproxy, да:  03 - UP, 01 - DOWN
-sudo journalctl -u haproxy.service --since today --no-pager
+vagrant ssh haproxy-01 -c 'sudo journalctl -u haproxy.service --since today --no-pager'
 #Oct 22 10:02:42 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-03 is UP, reason: Layer7 check passed, code: 200, check duration: 2ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
 #Oct 22 10:02:49 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-01 is DOWN, reason: Layer7 wrong status, code: 503, info: "Service Unavailable", check duration: 6ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
 
 # пробуем снова с клиента 
-vagrant ssh client
-export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"
+vagrant ssh client -c 'export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"'
 # You are connected to database "postgres" as user "admin" on host "192.168.0.31" at port "5000".
 
 # НЕ ПЕРЕКЛЮЧИЛОСЬ, почему-то.
