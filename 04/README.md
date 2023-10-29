@@ -14,7 +14,7 @@ tps = 481.710114 (without initial connection time)
 
 -- #2. настройка https://pgconfigurator.cybertec.at/
 sudo touch /var/lib/postgresql/15/main/postgresql.auto.conf
-cat << EOF >> /var/lib/postgresql/15/main/postgresql.auto.conf
+cat << EOF | sudo tee /var/lib/postgresql/15/main/postgresql.auto.conf
 # DISCLAIMER - Software and the resulting config files are provided AS IS - IN NO EVENT SHALL
 # BE THE CREATOR LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
 # DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION.
