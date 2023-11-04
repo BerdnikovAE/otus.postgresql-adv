@@ -59,10 +59,17 @@ vagrant ssh haproxy-01 -c 'sudo journalctl -u haproxy.service --since today --no
 vagrant up client
 
 # проверим куда подключаемся с client
-vagrant ssh client -c '
-export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"'
-
+vagrant ssh client
+export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"
 #You are connected to database "postgres" as user "admin" on host "192.168.0.31" at port "5000".
+# \conninfo показывает адрес haproxy, надо смотреть на 
+export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "SELECT reset_val FROM pg_settings WHERE name='listen_addresses'"
+#        reset_val
+#-------------------------
+# 127.0.0.1, 192.168.0.21
+#(1 row)
+
+# Всё правильно видим 21 хост 
 
 # Выглядит будто норм, но делаем switchover, успешно
 vagrant ssh pgsql-01 -c 'patronictl -c /etc/patroni/postgres0.yml switchover'
@@ -79,11 +86,14 @@ vagrant ssh haproxy-01 -c 'sudo journalctl -u haproxy.service --since today --no
 #Oct 22 10:02:42 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-03 is UP, reason: Layer7 check passed, code: 200, check duration: 2ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
 #Oct 22 10:02:49 haproxy-01 haproxy[5109]: [WARNING]  (5109) : Server postgres_write/pgsql-01 is DOWN, reason: Layer7 wrong status, code: 503, info: "Service Unavailable", check duration: 6ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
 
-# пробуем снова с клиента 
-vagrant ssh client -c 'export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "\conninfo"'
-# You are connected to database "postgres" as user "admin" on host "192.168.0.31" at port "5000".
+# смотрим с клиента где мы 
+export PGPASSWORD=admin-321; psql -U admin -d postgres -h 192.168.0.31 -p 5000 -c "SELECT reset_val FROM pg_settings WHERE name='listen_addresses'"
+#        reset_val
+#-------------------------
+# 127.0.0.1, 192.168.0.22
+#(1 row)
 
-# НЕ ПЕРЕКЛЮЧИЛОСЬ, почему-то.
+# ПЕРЕКЛЮЧИЛОСЬ!
 ```
 
 
