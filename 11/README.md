@@ -4,9 +4,9 @@
 Буду делать всё на локальном компьютере в VirtualBox.
 
 Готовим 6 виртуалок:
-    - master 
-    - standy 
-    - 4 x server-segment
+- master 
+- standy 
+- 4 x server-segment
 
 Все виртуалки провижинятся скриптом [install_greenplum.sh](install_greenplum.sh) 
 
