@@ -7,7 +7,11 @@ echo gpadmin:gpadmin123 | sudo chpasswd
 sudo usermod -aG sudo gpadmin
 
 # создадим ключ 
-sudo -u gpadmin ssh-keygen -t rsa -b 4096 -q -f /home/gpadmin/.ssh/id_rsa -N ''
+#sudo -u gpadmin ssh-keygen -t rsa -b 4096 -q -f /home/gpadmin/.ssh/id_rsa -N ''
+# будем использовать ключ от яндекса 
+sudo mkdir /home/gpadmin/.ssh
+sudo cp ~/.ssh/* /home/gpadmin/.ssh
+sudo chown gpadmin:gpadmin /home/gpadmin/.ssh{,/*}
 
 # добавим 18.04 репозитории 
 REPO="/etc/apt/sources.list.d/greenplum-ubuntu-db-bionic.list"
@@ -32,7 +36,6 @@ sudo gpg --export --armor 3C6FDC0C01D86213 | sudo apt-key add -
 # поставим greenplum-db-6
 sudo apt update && sudo apt install greenplum-db-6 -y
 
-
 # дадим права 
 sudo chown -R gpadmin:gpadmin /opt/greenplum*
 
@@ -43,23 +46,23 @@ echo "source /opt/greenplum-db-6.25.3/greenplum_path.sh" | sudo tee -a /home/gpa
 sudo chsh -s /bin/bash gpadmin
 
 # обменяемся ключиками через /vagrant папку
-sudo cp /home/gpadmin/.ssh/id_rsa.pub /vagrant/$HOSTNAME.pub
+# sudo cp /home/gpadmin/.ssh/id_rsa.pub /vagrant/$HOSTNAME.pub
+sudo ls /home/gpadmin/.ssh
 
-cat << EOF | sudo tee -a /etc/hosts
-192.168.0.11 gp-01
-192.168.0.12 gp-02
-192.168.0.13 gp-03
-192.168.0.14 gp-04
-192.168.0.15 gp-05
-192.168.0.16 gp-06
-EOF
+# YC это сделал сам 
+# cat << EOF | sudo tee -a /etc/hosts
+# 192.168.0.11 gp01
+# 192.168.0.12 gp02
+# 192.168.0.13 gp03
+# 192.168.0.14 gp04
+# EOF
 
 # кто у нас в кластере будет ?
 cat << EOF | sudo tee /home/gpadmin/hostfile_exkeys
-gp-01
-gp-02
-gp-03
-gp-04
+gp01
+gp02
+gp03
+gp04
 EOF
 
 # еще чего-то будет нехватать 
@@ -76,11 +79,12 @@ sudo mkdir -p /data/primary
 sudo chown gpadmin:gpadmin /data/primary
 
 cat << EOF | sudo tee /home/gpadmin/hostfile_gpinitsystem
-gp-01
-gp-02
-gp-03
-gp-04
+gp01
+gp02
+gp03
+gp04
 EOF
+
 
 echo "export MASTER_DATA_DIRECTORY=/data/master/gpseg-1" | sudo tee -a /home/gpadmin/.bashrc
 
