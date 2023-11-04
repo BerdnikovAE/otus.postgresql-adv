@@ -209,10 +209,10 @@ ANALYZE;
 
 
 SELECT
-    timestamp,
+    sensor_type,
     count(*)
 FROM sensors
-GROUP BY timestamp;
+GROUP BY sensor_type;
 
 -- дождаться было нереально, сделал заливку в postgres 100 млн. записей только 
 SELECT * FROM sensors LIMIT 100000000 INTO OUTFILE '/home/ae/export-100.csv' TRUNCATE
@@ -224,10 +224,10 @@ sudo du -d 0 -h /var/lib/postgresql
 
 -- только для 100 млн. записей (т.е. 1/7 от clickhouse)
 SELECT
-    timestamp,
+    sensor_type,
     count(*)
 FROM sensors
-GROUP BY timestamp;
+GROUP BY sensor_type;
 
 -- Time: 230131.601 ms (03:50.132)
 
@@ -236,10 +236,10 @@ CREATE INDEX ix_sensort_type ON sensors (sensor_type);
 
 -- повторяем запрос 
 SELECT
-    timestamp,
+    sensor_type,
     count(*)
 FROM sensors
-GROUP BY timestamp;
+GROUP BY sensor_type;
 -- Time: 3114.434 ms (00:03.114)
 -- помним, что это только на 100 млн. 
 
