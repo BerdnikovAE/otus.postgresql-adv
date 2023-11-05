@@ -133,7 +133,7 @@ SELECT
     sensor_type,
     count(*)
 FROM sensors
-GROUP BY sensor_type;;
+GROUP BY sensor_type;
 
 -- ответ готов за 8 секунд после ребута и за 0.8 сек. в повторе 
 
