@@ -43,7 +43,7 @@ for i in pgpri pgsec pgmon cli; do \
 # закинем скриптики установочные
 for i in pgpri pgsec pgmon cli; do \
     v=$i
-    scp /mnt/c/p/otus.postgresql-adv/09/*.sh ubuntu@${!v}:/home/ubuntu;     
+    scp /mnt/c/p/otus.postgresql-adv/10/*.sh ubuntu@${!v}:/home/ubuntu;     
     done;
     
 # и запустим на всех своё
