@@ -21,7 +21,7 @@ yc compute instance create \
   --preemptible \
   --metadata-from-file ssh-keys=/home/ae/.ssh/id_ed25519.txt \
   --name $i \
-  --hostname $i \
+  --hostname $i 
     done;
 
 # должно быть готово
@@ -43,6 +43,8 @@ for i in pgpri pgsec pgmon cli; do \
 # закинем скриптики установочные
 for i in pgpri pgsec pgmon cli; do \
     v=$i
+    scp /mnt/c/p/otus.postgresql-adv/09/*.sh ubuntu@${!v}:/home/ubuntu;     
+    done;
     
 # и запустим на всех своё
 ssh ubuntu@$pgmon bash /home/ubuntu/mon.sh
