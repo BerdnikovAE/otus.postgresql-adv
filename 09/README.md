@@ -54,7 +54,7 @@ ssh ubuntu@$cli bash /home/ubuntu/cli.sh
 - monitor   = [mon.sh](mon.sh)
 - primary   = [pri-sec.sh](pri-sec.sh)
 - secondary = [pri-sec.sh](pri-sec.sh)
-- client    = [clic.sh](clic.sh)
+- client    = [cli.sh](cli.sh)
 
 Всё развернулось, проверяем и шатаем.
 
