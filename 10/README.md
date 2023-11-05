@@ -249,7 +249,7 @@ CREATE TABLE sensors
 )
 
 IMPORT INTO sensors (sensor_id ,sensor_type ,location ,lat ,lon ,timestamp ,P1 ,P2 ,P0 ,durP1 ,ratioP1 ,durP2 ,ratioP2 ,pressure ,altitude ,pressure_sealevel ,temperature ,humidity ) 
-CSV DATA ('https://storage.yandexcloud.net/sensors-db/file-100.csv.zip') WITH DELIMITER = ',', SKIP = '1';
+CSV DATA ('https://storage.yandexcloud.net/sensors-db/file-100.csv') WITH DELIMITER = ',', SKIP = '1';
 
 # Time: 1154.380s total (execution 1154.191s / network 0.189s)
 
