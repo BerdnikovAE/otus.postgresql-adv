@@ -139,30 +139,6 @@ for i in $(seq -f "cdb%02g" 1 4); do \
     echo "$i = ${!v}"
     done;
 
-# закинем в VM ключики ssh
-# for i in $(seq -f "cdb%02g" 1 4); do \
-#     v=$i 
-#     echo "$i ${!v}"
-#     scp ~/.ssh/id_* ubuntu@${!v}:/home/ubuntu/.ssh
-#     scp ~/.ssh/authorized_keys ubuntu@${!v}:/home/ubuntu/.ssh
-#     done;
-
-
-# сделаем скриптик установки 
-cat << EOF | tee inst-cdb.sh
-wget -qO- https://binaries.cockroachdb.com/cockroach-v23.1.11.linux-amd64.tgz | \
-tar  xvz && sudo cp -i cockroach-v23.1.11.linux-amd64/cockroach /usr/local/bin/ && \
-sudo mkdir -p /opt/cockroach && \
-sudo chown ubuntu:ubuntu /opt/cockroach
-EOF
-
-#  for i in $(seq -f "cdb%02g" 1 4); do \
-#      v=$i 
-#      echo "$i ${!v}"
-#      scp inst-cdb.sh ubuntu@${!v}:/home/ubuntu/.ssh
-#     done;
-
-
 # установка на всех нодах
 for i in $(seq -f "cdb%02g" 1 4); do \
     v=$i 
@@ -181,6 +157,7 @@ cockroach cert create-ca --certs-dir=certs --ca-key=my-safe-directory/ca.key
 cockroach cert create-node localhost $(seq -f "cdb%02g" 1 4) --certs-dir=certs --ca-key=my-safe-directory/ca.key --overwrite
 cockroach cert create-client root --certs-dir=certs --ca-key=my-safe-directory/ca.key --overwrite
 cockroach cert list --certs-dir=certs
+logout
 
 # скопируем везде 
 cd ~
@@ -196,7 +173,7 @@ for i in $(seq -f "cdb%02g" 1 4); do \
 # стартанем везде
 for i in $(seq -f "cdb%02g" 1 4); do \
     v=$i    
-    ssh ubuntu@${!v} 'echo cockroach start --certs-dir=certs --advertise-addr='$i' --join=$(seq -f "cdb%02g" -s "," 1 4) --cache=.25 --max-sql-memory=.25 --background'
+    ssh ubuntu@${!v} 'cockroach start --certs-dir=certs --advertise-addr='$i' --join=$(seq -f "cdb%02g" -s "," 1 4) --cache=.25 --max-sql-memory=.25 --background'
     done;
 
 # init
@@ -270,11 +247,31 @@ SELECT
 FROM sensors
 GROUP BY sensor_type;
 # postgres : -- Time: 128721.572 ms (02:08.722)
-# CockroachDB   Time: 143.381s total (execution 143.379s / network 0.002s)
+# CockroachDB   Time: 102.802s total (execution 102.801s / network 0.000s)
 
 # а если индекс сделать ?
 CREATE INDEX ON defaultdb.public.sensors (sensor_type) STORING (temperature);
 
+# ERROR: unexpected EOF
+# warning: error retrieving the transaction status: connection closed unexpectedly: conn closed
+# warning: connection lost!
+# opening new connection: all session settings will be lost
+# warning: error retrieving the database name: failed to connect to `host=cdb01 user=root database=`: dial error (dial tcp 127.0.1.1:26257: connect: connection refused)
+
+# Всё упало, надо попробовать с нормальным кол-вом памяти
+# Добавил виртуалка по 8 GB
+
+
+CREATE INDEX ON defaultdb.public.sensors (sensor_type) STORING (temperature);
+# Time: 528.357s total (execution 528.357s / network 0.001s)
+
+SELECT
+    sensor_type,
+    avg(temperature)
+FROM sensors
+GROUP BY sensor_type;
+# Time: 28.294s total (execution 28.293s / network 0.000s)
+# уже лучше 
 
 
 # ИНТЕРЕСНО 
