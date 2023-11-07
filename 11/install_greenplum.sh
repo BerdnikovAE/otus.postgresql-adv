@@ -87,6 +87,7 @@ EOF
 
 
 echo "export MASTER_DATA_DIRECTORY=/data/master/gpseg-1" | sudo tee -a /home/gpadmin/.bashrc
+source ~/.bashrc
 
 
 
