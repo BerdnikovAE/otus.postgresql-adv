@@ -94,7 +94,7 @@ yc compute instance create \
   --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
   --zone ru-central1-a \
   --preemptible \
-  --metadata-from-file ssh-keys=.ssh/id_ed25519.txt \
+  --metadata-from-file ssh-keys=/home/ae/.ssh/id_ed25519.txt \
   --name gp0$i \
   --hostname gp0$i \
   --async 
@@ -113,7 +113,7 @@ for i in {1..4}; do \
     done;
 
 # закинем скриптик установочный и запустим, повторить на всех 
-for i in {1..4}; do \
+for i in {2..4}; do \
     v=gp0$i 
     scp /mnt/c/p/otus.postgresql-adv/11/install_greenplum.sh ubuntu@${!v}:/home/ubuntu
     ssh ubuntu@${!v} bash /home/ubuntu/install_greenplum.sh
@@ -121,6 +121,31 @@ for i in {1..4}; do \
 
 # Подключаемся к gp01
 ssh ubuntu@$gp01
+sudo -u gpadmin bash 
+
+mkdir /home/gpadmin/gpconfigs
+cp $GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config /home/gpadmin/gpconfigs/gpinitsystem_config
+nano /home/gpadmin/gpconfigs/gpinitsystem_config
+# поправить имя master
+# поправить кол-во сегментов, пусть хотя бы 1 будет 
+
+cd ~
+# проверим что связь со всеми хостами есть 
+gpssh -f hostfile_exkeys -e 'ls -la /opt/greenplum-db-*'
+
+# инициируем greenplum
+gpinitsystem -c gpconfigs/gpinitsystem_config -h hostfile_gpinitsystem -s gp-02 --mirror-mode=spread
+
+# если после ребута 
+# gpstart 
+
+# заходим в psql 
+psql -d postgres 
+
+
+
+gpstate -s
+
 
 sudo -u gpadmin bash 
 cd $HOME && wget --quiet https://edu.postgrespro.ru/demo_small.zip && unzip demo_small.zip 
@@ -128,11 +153,6 @@ psql -d postgres < demo_small.sql
 
 # и опять всё встает колом
 # но выглядит будтно все работает 
-gpstate -s # Greenplum Array Configuration details
-gpstate -m # Mirror Segments in the system and their status
-gpstate -c # To see the primary to mirror segment mappings
-gpstate -f # To see the status of the standby master mirror:
-
 ```
 
 
@@ -140,6 +160,11 @@ gpstate -f # To see the status of the standby master mirror:
 ```sh 
 # если что-то пошло не так, то можно к узлам напрямую подключится
 PGOPTIONS='-c gp_session_role=utility' psql -h gp01 -p 6000 -d postgres
+
+gpstate -s # Greenplum Array Configuration details
+gpstate -m # Mirror Segments in the system and their status
+gpstate -c # To see the primary to mirror segment mappings
+gpstate -f # To see the status of the standby master mirror:
 
 
 ```
