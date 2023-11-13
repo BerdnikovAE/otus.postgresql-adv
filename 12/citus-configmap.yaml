@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: citus-config
+data:
+  CITUS_WORKER_COUNT: "4"
+  CITUS_MASTER_HOST: "citus-master"
+  CITUS_MASTER_PORT: "5432"
+  POSTGRES_PASSWORD: "admin123"

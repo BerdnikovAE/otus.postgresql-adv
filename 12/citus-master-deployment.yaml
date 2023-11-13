@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: citus-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: citus-master
+  template:
+    metadata:
+      labels:
+        app: citus-master
+    spec:
+      containers:
+      - name: citus-master
+        image: citusdata/citus:12.1.0-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: citus-secrets
+              key: postgres-password
+        ports:
+        - containerPort: 5432
