@@ -8,7 +8,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 50Gi
 ---
 apiVersion: v1
 kind: Service
@@ -19,7 +19,8 @@ metadata:
 spec:
   selector:
     app: citus-master
-  type: ClusterIP
+#  type: ClusterIP
+  type: NodePort
   ports:
   - port: 5432
 ---
