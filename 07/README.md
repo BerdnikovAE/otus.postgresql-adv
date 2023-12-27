@@ -5,7 +5,7 @@
 
 # поставим в  windows minikude
 choco install minikube
-minikube start --vm-driver=virtualbox
+minikube start --vm-driver=virtualbox --no-vtx-check
 minikube status
 minikube version 
 
@@ -61,5 +61,13 @@ mydb=# select * from t1;
 kubectl delete namespace pg
 #kubectl delete -f my/postgresql-secret.yaml
 #kubectl delete -f my/postgresql-statefulset.yaml
+
+```
+
+
+
+
+``` sh
+choco install postgresql --ia '--enable-components commandlinetools'
 
 ```
