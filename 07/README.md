@@ -5,7 +5,7 @@
 
 # поставим в  windows minikude
 choco install minikube
-minikube start --vm-driver=virtualbox --no-vtx-check
+minikube start --vm-driver=virtualbox --no-vtx-check 
 minikube status
 minikube version 
 
