@@ -82,7 +82,7 @@ GROUP BY sensor_type;
 # CockroachDB                           -- Time: 142.412s total (execution 142.412s / network 0.000s)
 # Greenplum                             -- Time: 5401.526 ms
 # CitusDB YC k8s                        -- Time: 109026.862 ms (01:49.027)
-# Yandex Managed Service for PostgreSQL --
+# Yandex Managed Service for PostgreSQL -- Time: 1256629.719 ms (20:56.630) Сбросил окончания не дождался
 
 SELECT
     sensor_type,
@@ -93,9 +93,8 @@ GROUP BY sensor_type;
 # CockroachDB                           -- Time: 102.802s total (execution 102.801s / network 0.000s)
 # Greenplum                             -- Time: 7142.630 ms
 # CitusDB YC k8s                        -- Time: 62055.982 ms (01:02.056)
-# Yandex Managed Service for PostgreSQL --
+# Yandex Managed Service for PostgreSQL -- Окончания не дождался
 
--- вернулись по результатамс чего начали - postgresql
 ```
 
 ``` sh
