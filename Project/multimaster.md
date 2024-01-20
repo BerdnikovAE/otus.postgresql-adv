@@ -18,6 +18,22 @@ max_replication_slots = 10      # как минимум 2N
 wal_sender_timeout = 0
 
 max_worker_processes = 250 # (N - 1) * (max_connections + 3) + 3
+
+#etcd
+cluster is healthy
+9f79bd8cbb090fed: name=etcd-03 peerURLs=http://192.168.0.13:2380 clientURLs=http://192.168.0.13:2379 isLeader=false
+ab28f612fac9cd5e: name=etcd-02 peerURLs=http://192.168.0.12:2380 clientURLs=http://192.168.0.12:2379 isLeader=false
+ccf520eb1d8aac51: name=etcd-01 peerURLs=http://192.168.0.11:2380 clientURLs=http://192.168.0.11:2379 isLeader=true
+
+# patroni
++ Cluster: pg_patroni (7325984515973847232) ----+----+-----------+
+| Member   | Host         | Role    | State     | TL | Lag in MB |
++----------+--------------+---------+-----------+----+-----------+
+| pgsql-01 | 192.168.0.21 | Leader  | running   |  1 |           |
+| pgsql-02 | 192.168.0.22 | Replica | streaming |  1 |         0 |
+| pgsql-03 | 192.168.0.23 | Replica | streaming |  1 |         0 |
++----------+--------------+---------+-----------+----+-----------+
+
 ```
 
 ``` sql 
@@ -30,5 +46,6 @@ SELECT mtm.init_cluster('dbname=pooltest user=pooltest host=b-pg-01',
 
 SELECT * FROM mtm.status();
 SELECT * FROM mtm.nodes();
+
 
 ```
